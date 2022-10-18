@@ -1,17 +1,22 @@
 package ru.tusur.server.util;
 
 import ru.tusur.server.data.DrmData;
+import ru.tusur.server.data.StatusCode;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class DrmHandler {
 
 
     private static final Map<String, DrmData> usersData;
     private static final Map<String, Boolean> licenseData;
+    private static final Set<String> hardwareSet;
 
     static {
+        hardwareSet = new HashSet<>();
         usersData = new HashMap<>();
         DrmData drmData = new DrmData();
         drmData.setPassword("0000");
@@ -25,51 +30,65 @@ public class DrmHandler {
         licenseData.put("BBBB-XXXX-XXXX-XXXX", false);
     }
 
-    public static boolean isCorrectPassword(String username, String password) {
-        return isExist(username) && usersData.get(username).getPassword().equals(password);
+    public static StatusCode isCorrectPassword(String username, String password) {
+        if (!isExist(username)) {
+            return StatusCode.LOGIN_FAILED_201;
+        } else if (!usersData.get(username).getPassword().equals(password)) {
+            return StatusCode.LOGIN_FAILED_202;
+        } else {
+            return StatusCode.LOGIN_SUCCESS_101;
+        }
     }
 
-    public static boolean addUser(String username, String password) {
+    public static StatusCode addUser(String username, String password) {
         if (!isExist(username)) {
             DrmData drmData = new DrmData();
             drmData.setPassword(password);
             usersData.put(username, drmData);
-            return true;
+            return StatusCode.REGISTRATION_SUCCESS_110;
         }
-        return false;
+        return StatusCode.REGISTRATION_FAILED_210;
     }
 
-    public static boolean checkHardware(String username, String hardware) {
-        return isExist(username) && usersData.get(username).getHardware().equals(hardware);
+    public static StatusCode checkHardware(String username, String hardware) {
+        if (!isExist(username)) {
+            return StatusCode.LOGIN_FAILED_201;
+        } else if (!usersData.get(username).getHardware().equals(hardware)) {
+            return StatusCode.HARDWARE_FAILED_230;
+        } else {
+            return StatusCode.HARDWARE_SUCCESS_130;
+        }
     }
 
-    public static boolean addHardware(String username, String hardware) {
-        if (!isExist(username) && !checkHardware(username, hardware)) {
+    public static StatusCode addHardware(String username, String hardware) {
+
+        if (!isExist(username)) {
+            return StatusCode.LOGIN_FAILED_201;
+        } else if (hardwareSet.contains(hardware)) {
+            return StatusCode.HARDWARE_FAILED_231;
+        } else {
+            hardwareSet.add(hardware);
             DrmData drmData = usersData.get(username);
             drmData.setHardware(hardware);
             usersData.put(username, drmData);
-            return true;
+            return StatusCode.HARDWARE_SUCCESS_130;
         }
-        return false;
     }
 
-    public static boolean checkLicense(String username, String key) {
-        return isExist(username) && usersData.get(username).getLicense().equals(key);
-    }
-
-    public static boolean addLicense(String username, String key) {
-        if (isExist(username) && !checkLicense(username, key) && isExistLicense(key)) {
+    public static StatusCode addLicense(String username, String key) {
+        if (!isExist(username)) {
+            return StatusCode.LOGIN_FAILED_201;
+        } else if (!licenseData.containsKey(key)) {
+            return StatusCode.LICENSE_FAILED_221;
+        } else if (licenseData.get(key)) {
+            return StatusCode.LICENSE_FAILED_220;
+        } else {
             licenseData.put(key, !licenseData.get(key));
             DrmData drmData = usersData.get(username);
             drmData.setLicense(key);
             usersData.put(username, drmData);
-            return true;
+            return StatusCode.LICENSE_SUCCESS_120;
         }
-        return false;
-    }
-
-    private static boolean isExistLicense(String license) {
-        return licenseData.containsKey(license) && !licenseData.get(license);
     }
 
     private static boolean isExist(String username) {

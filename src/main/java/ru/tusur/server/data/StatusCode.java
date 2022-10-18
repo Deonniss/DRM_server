@@ -15,7 +15,8 @@ public enum StatusCode {
     LICENSE_FAILED_220("The license key is already activated!", 220),
     LICENSE_FAILED_221("The license key does not exist!", 221),
 
-    HARDWARE_FAILED_230("The hardware configuration is incorrect", 230);
+    HARDWARE_FAILED_230("The hardware configuration is incorrect", 230),
+    HARDWARE_FAILED_231("The hardware configuration already exist", 231);
 
     public final String message;
     public final int code;
@@ -23,10 +24,6 @@ public enum StatusCode {
     StatusCode(String message, int code) {
         this.message = message;
         this.code = code;
-    }
-
-    public static StatusCode findByCode(String name){
-        return StatusCode.valueOf(name);
     }
 }
 
