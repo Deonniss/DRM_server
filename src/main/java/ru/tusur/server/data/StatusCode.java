@@ -4,7 +4,7 @@ public enum StatusCode {
 
     LOGIN_SUCCESS_101("Successful authorization!", 101),
     REGISTRATION_SUCCESS_110("Successful registration", 110),
-    LICENSE_SUCCESS_120("The license key has been successfully activated", 210),
+    LICENSE_SUCCESS_120("The license key has been successfully activated", 120),
     HARDWARE_SUCCESS_130("The hardware configuration is correct", 130),
 
     LOGIN_FAILED_201("User does not exist", 201),
@@ -18,12 +18,20 @@ public enum StatusCode {
     HARDWARE_FAILED_230("The hardware configuration is incorrect", 230),
     HARDWARE_FAILED_231("The hardware configuration already exist", 231);
 
-    public final String message;
-    public final int code;
+    private final String message;
+    private final int code;
 
     StatusCode(String message, int code) {
         this.message = message;
         this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getCode() {
+        return code;
     }
 }
 

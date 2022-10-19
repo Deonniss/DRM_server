@@ -14,22 +14,22 @@ public class DrmController {
         return ResponseEntity.ok(DrmHandler.isCorrectPassword(username, password));
     }
 
-    @GetMapping("/check/hardware")
+    @GetMapping("/hardware")
     public ResponseEntity<?> checkHardware(String username, String hardware) {
         return ResponseEntity.ok(DrmHandler.checkHardware(username, hardware));
     }
 
-    @PostMapping("/add/license")
+    @GetMapping("/license")
     public ResponseEntity<?> addLicense(String username, String key) {
         return ResponseEntity.ok(DrmHandler.addLicense(username, key));
     }
 
-    @PostMapping("/add/hardware")
+    @GetMapping("/hardware/add")
     public ResponseEntity<?> addHardware(String username, String hardware) {
         return ResponseEntity.ok(DrmHandler.addHardware(username, hardware));
     }
 
-    @PostMapping("/registration")
+    @GetMapping("/registration")
     public ResponseEntity<?> registration(String username, String password) {
         return ResponseEntity.ok(DrmHandler.addUser(username, password));
     }
