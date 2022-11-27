@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <changeSet id="db.changelog-20221127-add_tables_drm.xml-1" author="golovin">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="drm_data"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="drm_data">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hardware" type="varchar(128)"/>
+            <column name="license_key" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="db.changelog-20221127-add_tables_drm.xml-2" author="golovin">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="license"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="license">
+            <column name="license_key" type="UUID">
+                <constraints unique="true" nullable="false" primaryKey="true"/>
+            </column>
+            <column name="blocked" type="bool"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="db.changelog-20221127-add_tables_drm.xml-3" author="golovin">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_drm_license_key"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_drm_license_key"
+                                 baseTableName="drm_data"
+                                 baseColumnNames="license_key"
+                                 referencedTableName="license"
+                                 referencedColumnNames="license_key"/>
+    </changeSet>
+</databaseChangeLog>
