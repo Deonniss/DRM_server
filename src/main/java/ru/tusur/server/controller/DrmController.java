@@ -25,30 +25,8 @@ public class DrmController {
         return ResponseEntity.ok(drmService.registration(username, password, hardware, license));
     }
 
-//    @GetMapping("/hardware")
-//    public ResponseEntity<?> checkHardware(String username, String hardware) {
-//        return ResponseEntity.ok(drmService.checkHardwareAndLicense(username, hardware));
-//    }
-//
-//    @GetMapping("/license")
-//    public ResponseEntity<?> linkLicense(String username, String key) {
-//        return ResponseEntity.ok(drmService.linkLicense(username, key));
-//    }
-//
-//    @GetMapping("/hardware/add")
-//    public ResponseEntity<?> addHardware(String username, String hardware) {
-//        return ResponseEntity.ok(drmService.addHardware(username, hardware));
-//    }
-
-//    @GetMapping("/checkUser")
-//    public ResponseEntity<?> check(String username) {
-//        return ResponseEntity.ok(drmService.checkUser(username));
-//    }
-
-
-
     @GetMapping("/users")
-    public ResponseEntity<?> fetUsers() {
+    public ResponseEntity<?> getUsers() {
         return ResponseEntity.ok(drmService.getUsers());
     }
 
